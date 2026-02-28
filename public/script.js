@@ -9,12 +9,20 @@ let currentIndex = 0;
 // Fetch Images from Server
 async function loadImages() {
     try {
-        const res = await fetch("http://localhost:8080/api/images");
+        const res = await fetch("/api/images");
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch images");
+        }
+
         images = await res.json();
 
         if (images.length > 0) {
             galleryImage.src = images[currentIndex].imageUrl;
+        } else {
+            galleryImage.src = "";
         }
+
     } catch (err) {
         console.error("Error fetching images:", err);
     }
@@ -26,13 +34,22 @@ form.addEventListener("submit", async (e) => {
 
     const formData = new FormData(form);
 
-    await fetch("http://localhost:8080/api/images/upload", {
-        method: "POST",
-        body: formData
-    });
+    try {
+        const res = await fetch("/api/images/upload", {   // ✅ FIXED HERE
+            method: "POST",
+            body: formData
+        });
 
-    form.reset();
-    await loadImages();
+        if (!res.ok) {
+            throw new Error("Upload failed");
+        }
+
+        form.reset();
+        await loadImages();
+
+    } catch (err) {
+        console.error("Upload error:", err);
+    }
 });
 
 // Next Button
