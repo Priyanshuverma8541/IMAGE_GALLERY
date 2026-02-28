@@ -23,6 +23,7 @@ const upload = multer({ storage });
 const imageSchema = new mongoose.Schema({
   title: String,
   imageUrl: String,
+  publicId: String, // ADD THIS
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -51,7 +52,8 @@ export default async function handler(req, res) {
 
           const newImage = await Image.create({
             title: req.body.title,
-            imageUrl: result.secure_url
+            imageUrl: result.secure_url,
+            publicId: result.public_id
           });
 
           res.json(newImage);
@@ -61,4 +63,17 @@ export default async function handler(req, res) {
       stream.end(req.file.buffer);
     });
   }
+  if (req.method === "DELETE") {
+    const { id } = req.query;
+
+    const image = await Image.findById(id);
+    if (!image) return res.status(404).json({ error: "Image not found" });
+
+    await cloudinary.v2.uploader.destroy(image.publicId);
+    await Image.findByIdAndDelete(id);
+
+    return res.json({ message: "Deleted successfully" });
+  }
 }
+
+
