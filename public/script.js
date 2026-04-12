@@ -9,8 +9,17 @@ function createModal(img) {
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close">&times;</span>
-      <img src="${img.imageUrl}" />
+
+      ${
+        img.fileType === "image"
+          ? `<img src="${img.imageUrl}" />`
+          : `<iframe src="${img.imageUrl}" width="100%" height="400px"></iframe>`
+      }
+
       <h3>${img.title}</h3>
+
+      <a href="${img.imageUrl}" target="_blank">🔗 Open File</a>
+
       <button class="delete-btn">Delete</button>
     </div>
   `;
@@ -20,7 +29,7 @@ function createModal(img) {
   modal.querySelector(".close").onclick = () => modal.remove();
 
   modal.querySelector(".delete-btn").onclick = async () => {
-    if (confirm("Are you sure you want to delete this image?")) {
+    if (confirm("Delete this file?")) {
       await fetch(`/api/images?id=${img._id}`, {
         method: "DELETE"
       });
@@ -36,17 +45,24 @@ function createModal(img) {
 
 async function loadImages() {
   loading.style.display = "block";
+
   const res = await fetch("/api/images");
   const images = await res.json();
+
   loading.style.display = "none";
 
   container.innerHTML = "";
+
   images.forEach(img => {
     const card = document.createElement("div");
     card.className = "image-card";
 
     card.innerHTML = `
-      <img src="${img.imageUrl}" alt="${img.title}" />
+      ${
+        img.fileType === "image"
+          ? `<img src="${img.imageUrl}" />`
+          : `<div class="doc-card">📄 Document</div>`
+      }
       <h3>${img.title}</h3>
     `;
 
@@ -58,7 +74,10 @@ async function loadImages() {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const formData = new FormData(form);
+
+  loading.style.display = "block";
 
   await fetch("/api/images", {
     method: "POST",

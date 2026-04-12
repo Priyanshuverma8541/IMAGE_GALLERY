@@ -8,62 +8,27 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<h1>Image Gallery</h1>
+<h1>📂 My Gallery (Images + Documents)</h1>
 
 <form id="uploadForm">
-  Savitri Jewellers 
-<a href="https://savitri-jewellers-frontend-9o6p.onrender.com/" target="_blank">
-  Visit
-</a><br>
 
-Chat App 
-<a href="https://chat-app-2-cwv8.onrender.com/" target="_blank">
-  Visit
-</a><br>
-
-Mongo Atlas 
-<a href="https://cloud.mongodb.com/v2/67710df5380c3569730c8949#/overview" target="_blank">
-  Visit
-</a><br>
-
-Cloudinary 
-<a href="https://console.cloudinary.com/app/c-dc05ce30af76ecb3ad8915c0862d59/assets/media_library/search?q=&view_mode=mosaic" target="_blank">
-  Visit
-</a><br>
-
-Vercel 
-<a href="https://vercel.com/priyanshuverma8541s-projects" target="_blank">
-  Visit
-</a><br>
-
-Portfolio 
-<a href="https://portfolio-pied-three-46.vercel.app/" target="_blank">
-  Visit
-</a>
-
-Cloudinary 
-<a href="https://console.cloudinary.com/app/c-dc05ce30af76ecb3ad8915c0862d59/assets/media_library/search?q=&view_mode=mosaic" target="_blank">
-  Visit
-</a><br>
-
- <div class="link-box">
-    <strong>Construction & Design Project:</strong><br>
-    <a href="https://construction-and-design.vercel.app/" target="_blank">
-      Visit
-    </a>
+  <div class="links">
+    <a href="https://portfolio-pied-three-46.vercel.app/" target="_blank">Portfolio</a>
+    <a href="https://chat-app-2-cwv8.onrender.com/" target="_blank">Chat App</a>
+    <a href="https://construction-and-design.vercel.app/" target="_blank">Project</a>
   </div>
-  
-  <input type="text" name="title" placeholder="Image Title" required />
-  <input type="file" name="image" accept="image/*" required />
-  <button type="submit">Upload</button>
+
+  <input type="text" name="title" placeholder="Enter Title" required />
+
+  <!-- 🔥 UPDATED -->
+  <input type="file" name="image" accept="image/*,.pdf,.doc,.docx" required />
+
+  <button type="submit">Upload File 🚀</button>
 </form>
-
-<p id="loading" style="display:none;text-align:center;margin-top:20px;">Loading...</p>
-
 
 <div id="imageContainer"></div>
 
 <script src="script.js"></script>
+<script src="script2.js"></script>
 </body>
 </html>
