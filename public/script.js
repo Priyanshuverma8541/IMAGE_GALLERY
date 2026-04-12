@@ -8,7 +8,7 @@ function isImage(file) {
   return file.fileType === "image" || !file.fileType;
 }
 async function loadNavbar() {
-  const res = await fetch("/components/navbar.html");
+  const res = await fetch("navbar.html");
   const data = await res.text();
   document.getElementById("navbar").innerHTML = data;
 }
