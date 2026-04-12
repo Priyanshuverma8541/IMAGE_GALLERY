@@ -1,34 +1,38 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Gallery</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Gallery</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<h1>📂 My Gallery (Images + Documents)</h1>
 
-<form id="uploadForm">
+<header>
+  <h1>📂 Smart File Gallery</h1>
+  <p>Upload Images & Documents (PDF, DOC, etc.)</p>
+</header>
 
-  <div class="links">
-    <a href="https://portfolio-pied-three-46.vercel.app/" target="_blank">Portfolio</a>
-    <a href="https://chat-app-2-cwv8.onrender.com/" target="_blank">Chat App</a>
-    <a href="https://construction-and-design.vercel.app/" target="_blank">Project</a>
-  </div>
+<section class="upload-section">
+  <form id="uploadForm">
+    <input type="text" name="title" placeholder="Enter title..." required />
 
-  <input type="text" name="title" placeholder="Enter Title" required />
+    <input type="file" name="image" accept="image/*,.pdf,.doc,.docx" required />
 
-  <!-- 🔥 UPDATED -->
-  <input type="file" name="image" accept="image/*,.pdf,.doc,.docx" required />
+    <button type="submit">Upload 🚀</button>
+  </form>
+</section>
 
-  <button type="submit">Upload File 🚀</button>
-</form>
+<section class="filters">
+  <button onclick="filterFiles('all')">All</button>
+  <button onclick="filterFiles('image')">Images</button>
+  <button onclick="filterFiles('doc')">Documents</button>
+</section>
+
+<p id="loading">Loading...</p>
 
 <div id="imageContainer"></div>
 
 <script src="script.js"></script>
-<script src="script2.js"></script>
 </body>
 </html>

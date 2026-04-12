@@ -2,7 +2,13 @@ const form = document.getElementById("uploadForm");
 const container = document.getElementById("imageContainer");
 const loading = document.getElementById("loading");
 
-function createModal(img) {
+let allFiles = [];
+
+function isImage(file) {
+  return file.fileType === "image" || !file.fileType;
+}
+
+function createModal(file) {
   const modal = document.createElement("div");
   modal.className = "modal";
 
@@ -11,16 +17,20 @@ function createModal(img) {
       <span class="close">&times;</span>
 
       ${
-        img.fileType === "image"
-          ? `<img src="${img.imageUrl}" />`
-          : `<iframe src="${img.imageUrl}" width="100%" height="400px"></iframe>`
+        isImage(file)
+          ? `<img src="${file.imageUrl}" />`
+          : `<iframe src="${file.imageUrl}"></iframe>`
       }
 
-      <h3>${img.title}</h3>
+      <h3>${file.title}</h3>
 
-      <a href="${img.imageUrl}" target="_blank">🔗 Open File</a>
+      <div class="actions">
+        <a href="${file.imageUrl}" target="_blank">
+          <button class="open">Open</button>
+        </a>
 
-      <button class="delete-btn">Delete</button>
+        <button class="delete">Delete</button>
+      </div>
     </div>
   `;
 
@@ -28,13 +38,11 @@ function createModal(img) {
 
   modal.querySelector(".close").onclick = () => modal.remove();
 
-  modal.querySelector(".delete-btn").onclick = async () => {
+  modal.querySelector(".delete").onclick = async () => {
     if (confirm("Delete this file?")) {
-      await fetch(`/api/images?id=${img._id}`, {
-        method: "DELETE"
-      });
+      await fetch(`/api/images?id=${file._id}`, { method: "DELETE" });
       modal.remove();
-      loadImages();
+      loadFiles();
     }
   };
 
@@ -43,33 +51,49 @@ function createModal(img) {
   };
 }
 
-async function loadImages() {
-  loading.style.display = "block";
-
-  const res = await fetch("/api/images");
-  const images = await res.json();
-
-  loading.style.display = "none";
-
+function render(files) {
   container.innerHTML = "";
 
-  images.forEach(img => {
+  files.forEach(file => {
     const card = document.createElement("div");
-    card.className = "image-card";
+    card.className = "card";
 
     card.innerHTML = `
       ${
-        img.fileType === "image"
-          ? `<img src="${img.imageUrl}" />`
-          : `<div class="doc-card">📄 Document</div>`
+        isImage(file)
+          ? `<img src="${file.imageUrl}" />`
+          : `<div class="doc-card">📄</div>`
       }
-      <h3>${img.title}</h3>
+      <h3>${file.title}</h3>
     `;
 
-    card.onclick = () => createModal(img);
+    card.onclick = () => createModal(file);
 
     container.appendChild(card);
   });
+}
+
+async function loadFiles() {
+  loading.style.display = "block";
+
+  const res = await fetch("/api/images");
+  allFiles = await res.json();
+
+  loading.style.display = "none";
+
+  render(allFiles);
+}
+
+function filterFiles(type) {
+  if (type === "all") return render(allFiles);
+
+  if (type === "image") {
+    render(allFiles.filter(f => isImage(f)));
+  }
+
+  if (type === "doc") {
+    render(allFiles.filter(f => !isImage(f)));
+  }
 }
 
 form.addEventListener("submit", async (e) => {
@@ -85,7 +109,7 @@ form.addEventListener("submit", async (e) => {
   });
 
   form.reset();
-  loadImages();
+  loadFiles();
 });
 
-loadImages();
+loadFiles();
